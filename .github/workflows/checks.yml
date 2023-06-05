@@ -6,7 +6,7 @@ on: [push]
 jobs:
   test-lint:
     name: Test and Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
         #this action is already something github has, you can create your own but github action has docker login
