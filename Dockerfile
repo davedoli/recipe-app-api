@@ -19,6 +19,10 @@ ARG DEV=false
 RUN python -m venv /py && \
 #installs PIP 
     /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client &&\
+    ##virtuals flag creates a virtual dependency package. buildbase, postgressql-dev, musl-dev gets grouped and then it gets removed later
+    apk add --update --no-cache --virtual .tmp-build-deps\
+        build-base postgresql-dev musl-dev &&\
 #installs our requirements.txt by calling pip install -r requirements.txt
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ $DEV = "true" ]; \
@@ -26,6 +30,7 @@ RUN python -m venv /py && \
     fi && \
 #remove any extra depencies on directory. Remove the requirements.txt after running pip install, keep it lightweight
     rm -rf /tmp && \
+    apk del .tmp-build-deps &&\
 #adds new user. Best practice to not use root user.
     adduser \
         --disabled-password \
